@@ -20,7 +20,7 @@ test.describe("User Authentication Tests", () => {
         // Navigate to login page
         const loginBtnLandingPage = await page.getByRole("link", { name: "Login" });
         await loginBtnLandingPage.click();
-
+        await page.waitForURL('**/login');
         // Fill in the login form
         const username = await page.getByPlaceholder("Username");
         await username.fill(process.env.USERNAME);
@@ -30,7 +30,7 @@ test.describe("User Authentication Tests", () => {
         // Submit the login form
         const loginBtnOnLoginPage = await page.getByRole("button", { name: "Login" });
         await loginBtnOnLoginPage.click();
-
+        await page.waitForURL('**/portfolios');
         // Assert that the user is on the portfolios page
         await expect(page).toHaveURL(/.*portfolios/);
         console.log("Success: User landed on portfolios page");
@@ -46,24 +46,24 @@ test.describe("User Authentication Tests", () => {
         console.log("Success: User is on the Portfolios page");
 
         // Check for the visibility of portfolio title
-        const portfolioTitle = await page.locator('h1:has-text("Your Portfolios")');
-        await expect(portfolioTitle).toBeVisible();
-        console.log("Success: Portfolio title is visible");
-
+        const portfoliosTitle = await page.locator('h1:has-text("Portfolios")');
+        await expect(portfoliosTitle).toBeVisible();
+        console.log("Success: Portfolios title is visible");
+        
+        const menu = await page.getByRole('button', { name: 'Open user menu' })
+        await expect(menu).toBeVisible();
+        await menu.click();
+        
         // Log out the user
-        const logoutBtn = await page.getByRole("button", { name: "Logout" });
+        const logoutBtn = await page.getByRole('menuitem', { name: 'Log out' })
         await logoutBtn.click();
-        await expect(page).toHaveURL(/.*login/);
+
+        const landingPage = page.getByRole('heading', { name: 'Bossman Visualizations', exact: true })
+        await expect(landingPage).toBeVisible();
         console.log("Success: User logged out");
 
-        // Close the browser instance
-        browser.close();
     });
 
-    // Runs after each test
-    test.afterEach(async ({ page }) => {
-        await page.close();
-        console.log("Closed page");
-    });
+
 
 });
