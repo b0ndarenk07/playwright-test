@@ -44,11 +44,11 @@ test("createPortfolio - public portfolio visibility", async ({ page }) => {
   });
 });
 
-test("createPortfolio - with asset and piechart", async ({ page }) => {
+test("createPortfolio - with stock and crypto asset and assert piechart", async ({ page }) => {
   await login(page);
 
   //   TODO: we logged in, now let's create a portfolio
-  //   Verify that a portfolio with a stock asset can render the pie chart.
+  //   Verify that a portfolio with a stock and crypto asset can render the pie chart.
   await page.screenshot({
     path: "screenshots/createPortfolio.piechart.spec.png",
     fullPage: true,
