@@ -12,9 +12,9 @@ test("createPortfolio - empty portfolio", async ({ page }) => {
   await login(page);
 
   // Navigate to create portfolio page
-  const createPortfolioButton = await page.getByRole("button", { name: "Create Portfolio" });
+  const createPortfolioButton = await page.getByRole("button", { name: "Create New Portfolio" });
   await createPortfolioButton.click();
-  await page.waitForURL('**/create-portfolio');
+  await page.waitForURL('**/portfolio/new');
 
   // Fill in portfolio details and submit
   const portfolioNameInput = await page.getByPlaceholder("Portfolio Name");
