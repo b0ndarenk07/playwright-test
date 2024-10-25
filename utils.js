@@ -2,9 +2,10 @@ const { test, expect } = require("@playwright/test");
 const dotenv = require("dotenv");
 dotenv.config();
 
+export const home = "https://bossman.co/";
 
-export const login = async (page) => {
-    const url = "https://bossman.co/";
+export const login = async (page, USER , PASS) => {
+    const url = home;
     await page.goto(url);
     const loginBtnLandingPage = await page.getByRole("link", { name: "Login" });
     await loginBtnLandingPage.click();
@@ -12,9 +13,15 @@ export const login = async (page) => {
     const loginTitle = await page.getByRole("heading", { name: "Login" });
     expect(loginTitle).toBeTruthy();
     const username = await page.getByPlaceholder("Username");
-    await username.fill(process.env.USERNAME);
+    if (USER == null) {
+      USER = process.env.USERNAME;
+    }
+    await username.fill(USER);
+    if (PASS == null) {
+      PASS = process.env.PASSWORD;
+    }
     const password = await page.getByPlaceholder("********");
-    await password.fill(process.env.PASSWORD);
+    await password.fill(PASS);
   
     const loginBtnOnLoginPage = await page.getByRole("button", { name: "Login" });
     await loginBtnOnLoginPage.click();
