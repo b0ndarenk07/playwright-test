@@ -1,11 +1,17 @@
 const { test, expect } = require("@playwright/test");
 test.use({ workers: 1 });
-test.describe.configure({ mode: "parallel" });
+test.describe.configure({ mode: "serial" });
 const timeout = 35 * 60 * 1000;
 test.setTimeout(timeout);
 const dotenv = require("dotenv");
 dotenv.config();
 import { login } from "../utils";
+
+const port = {
+  name: "A TEST OF TIME",
+  description: "AN ABSOLUTE MONSTER OF A PORTFOLIO",
+  empty: "EMPTY PORTFOLIO",
+}
 
 // Test for creating an empty portfolio
 test("createPortfolio - empty portfolio", async ({ page }) => {
@@ -15,21 +21,24 @@ test("createPortfolio - empty portfolio", async ({ page }) => {
   const createPortfolioButton = await page.getByRole("button", { name: "Create New Portfolio" });
   await createPortfolioButton.click();
   await page.waitForURL('**/portfolio/new');
+  await page.waitForTimeout(500);   
 
   // Fill in portfolio details and submit
   const portfolioNameInput = await page.getByPlaceholder("Portfolio Name");
-  await portfolioNameInput.fill("Empty Portfolio");
+  await portfolioNameInput.fill(port.empty);
   const description = await page.getByPlaceholder('Portfolio description')
-  await description.fill("Portfolio description");
-  const createButton = await page.getByRole("button", { name: "Create" });
+  await description.fill(port.description);
+  const createButton = await page.getByRole("button", { name: "Create Portfolio" });
   await createButton.click();
+  await page.waitForTimeout(500);   
 
   // Verify that the portfolio was created successfully
-  await page.waitForURL('**/portfolios');
-  const portfolioTitle = await page.getByText("Empty Portfolio");
+  await page.waitForURL(/\/portfolio\/\d+$/);
+  const portfolioTitle = await page.getByText(port.empty).nth(0);
   await expect(portfolioTitle).toBeVisible();
   console.log("Success: Empty portfolio created and title is visible");
-
+  await page.waitForTimeout(500);   
+  
   // Take a screenshot
   await page.screenshot({
     path: "screenshots/createPortfolio.spec.png",
