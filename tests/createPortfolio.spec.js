@@ -19,6 +19,8 @@ test("createPortfolio - empty portfolio", async ({ page }) => {
   // Fill in portfolio details and submit
   const portfolioNameInput = await page.getByPlaceholder("Portfolio Name");
   await portfolioNameInput.fill("Empty Portfolio");
+  const description = await page.getByPlaceholder('Portfolio description')
+  await description.fill("Portfolio description");
   const createButton = await page.getByRole("button", { name: "Create" });
   await createButton.click();
 

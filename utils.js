@@ -18,7 +18,41 @@ export const login = async (page) => {
   
     const loginBtnOnLoginPage = await page.getByRole("button", { name: "Login" });
     await loginBtnOnLoginPage.click();
+    await page.waitForURL('**/portfolios');
     await expect(page).toHaveURL(/.*portfolios/);
     console.log("Success: user logged in and landed on portfolios page");
   
   };
+
+
+export const createPortfolio = async (page, portfolioName,portfolioDescription, isPublic) => {
+    // Navigate to create portfolio page
+    const createPortfolioButton = await page.getByRole("button", { name: "Create New Portfolio" });
+    await createPortfolioButton.click();
+    await page.waitForURL('**/portfolio/new');
+  
+    // Fill in portfolio details and submit
+    const portfolioNameInput = await page.getByPlaceholder("Portfolio Name");
+    await portfolioNameInput.fill(portfolioName);
+    const description = await page.getByPlaceholder('Portfolio description')
+    await description.fill(portfolioDescription);
+
+    if(isPublic == true){
+    // if checkbox is checked then its a publicly facing portfolio otherwise its private
+    const publicCheckbox = await page.getByLabel('Public')
+    await publicCheckbox.click();
+    }
+
+    //  create the portfolio
+    const createButton = await page.getByRole("button", { name: "Create" });
+    await createButton.click();
+  
+    // Verify that the portfolio was created successfully
+    await page.waitForURL(/\/portfolio\/\d+$/);
+    const portfolioTitle = await page.getByText(portfolioName).nth(0);
+    await expect(portfolioTitle).toBeVisible();
+    console.log("Success: Empty portfolio created and title is visible");
+
+ 
+  
+};
